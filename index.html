@@ -369,18 +369,19 @@
   <script>
 
 document.addEventListener('DOMContentLoaded', function() {
-  // Check if user has already selected sounds before
-  const hasVisitedBefore = localStorage.getItem('hasVisitedBefore');
+  // Check for URL parameters
+  const urlParams = new URLSearchParams(window.location.search);
+  const showCards = urlParams.get('showCards');
   
-  if (hasVisitedBefore) {
-    // If user has visited before, show sound cards directly
+  if (showCards === 'true') {
+    // If the URL has the parameter, show sound cards directly
     document.getElementById("main").style.display = "none";
     document.getElementById("body").style.backgroundColor = "white";
     document.getElementById("body").style.padding = 0;
     document.getElementById("soundCardsPage").style.display = "block";
     createSoundCardsGrid();
   } else {
-    // If it's first visit, show the main selection screen
+    // If no parameter, show the main selection screen
     createSoundButtons();
   }
 });
@@ -476,42 +477,50 @@ document.addEventListener('DOMContentLoaded', function() {
   document.getElementById("body").style.padding = 0;
   document.getElementById("soundCardsPage").style.display = "block";
   createSoundCardsGrid();
-  
-  // Save that user has made a selection
-  localStorage.setItem('hasVisitedBefore', 'true');
 }
-    function createSoundCardsGrid() {
-      const grid = document.getElementById('soundCardsGrid');
-      grid.innerHTML = '';
+function createSoundCardsGrid() {
+  const grid = document.getElementById('soundCardsGrid');
+  grid.innerHTML = '';
 
-      const sortedSounds = [...sounds].sort((a, b) => {
-        const aSelected = selectedSounds.includes(a.id);
-        const bSelected = selectedSounds.includes(b.id);
-        
-        if (aSelected && !bSelected) return -1;
-        if (!aSelected && bSelected) return 1;
-        return 0;
-      });
-      sortedSounds.forEach(sound => {
-        const column = document.createElement('div');
-        column.className = 'col';
-        
-        column.innerHTML = `
-        <a href="${sound.link}" style="text-decoration: none; color: inherit;">
-          <div class="sound-card">
-            <div class="sound-image" style="background-color: ${sound.bgColor}">
-              <img src="${sound.image}" alt="${sound.name}">
-            </div>
-            <div class="sound-title" style="background-color: ${sound.titleColor}; color: #222;border-radius:0 0 15px 15px;">
-              ${sound.name}
-            </div>
-          </div>
-        </a>
-        `;
-        
-        grid.appendChild(column);
-      });
+  const sortedSounds = [...sounds].sort((a, b) => {
+    const aSelected = selectedSounds.includes(a.id);
+    const bSelected = selectedSounds.includes(b.id);
+    
+    if (aSelected && !bSelected) return -1;
+    if (!aSelected && bSelected) return 1;
+    return 0;
+  });
+  
+  sortedSounds.forEach(sound => {
+    const column = document.createElement('div');
+    column.className = 'col';
+    
+    // Determine the link for each sound card
+    let link = sound.link;
+    if (link && !link.includes('?')) {
+      // Add the parameter to return to sound cards
+      link += '?showCards=true';
+    } else if (link && !link.includes('showCards=true')) {
+      // If link already has parameters, append with &
+      link += '&showCards=true';
     }
+    
+    column.innerHTML = `
+    <a href="${link}" style="text-decoration: none; color: inherit;">
+      <div class="sound-card">
+        <div class="sound-image" style="background-color: ${sound.bgColor}">
+          <img src="${sound.image}" alt="${sound.name}">
+        </div>
+        <div class="sound-title" style="background-color: ${sound.titleColor}; color: #222;border-radius:0 0 15px 15px;">
+          ${sound.name}
+        </div>
+      </div>
+    </a>
+    `;
+    
+    grid.appendChild(column);
+  });
+}
     document.addEventListener('DOMContentLoaded', createSoundButtons);
 
 
