@@ -169,35 +169,28 @@
     /* ///////////////////////////// */
     
      
-    .star {
-    font-size: 2rem;
-    color: gray;
-    cursor: pointer;
-  }
-  .star.selected, .star:hover {
-    color: gold;
-  }
+
 
 
 
 
   .sidebar {
-    position: fixed;
-    top: 0;
-    right: -280px;
-    width: 280px;
-    height: 100%;
-    background-color: white;
-    box-shadow: -2px 0 5px rgba(0,0,0,0.2);
-    z-index: 1050;
-    transition: right 0.3s ease-in-out;
-    padding: 15px;
-    overflow-y: auto;
-  }
-  
-  .sidebar.active {
-    right: 0;
-  }
+  position: fixed;
+  top: 0;
+  left: -280px; /* Changed from right: -280px to left: -280px */
+  width: 280px;
+  height: 100%;
+  background-color: white;
+  box-shadow: 2px 0 5px rgba(0,0,0,0.2); /* Changed shadow direction */
+  z-index: 1050;
+  transition: left 0.3s ease-in-out; /* Changed from right to left */
+  padding: 15px;
+  overflow-y: auto;
+}
+
+.sidebar.active {
+  left: 0; /* Changed from right: 0 to left: 0 */
+}
   
   .sidebar-header {
     display: flex;
@@ -212,6 +205,7 @@
     margin: 0;
     color: #1a3b5d;
     font-weight: bold;
+    
   }
   
   .close-sidebar {
@@ -276,6 +270,104 @@
   .fixed-header .main-title {
     margin-bottom: 0;
   }
+    
+
+
+
+
+      .header {
+        margin-bottom: 30px;
+      }
+      .header h1 {
+        font-size: 32px;
+        margin: 0 0 15px 0;
+        color: #1a1a1a;
+      }
+      .emoji {
+        font-size: 60px;
+        margin: 20px 0;
+        transition: all 0.3s ease;
+      }
+      .stars {
+        margin: 20px 0;
+        display: flex;
+        justify-content: center;
+        gap: 12px;
+        position: relative;
+      }
+      .star {
+        font-size: 52px;
+        color: #e0e0e0;
+        cursor: pointer;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        position: relative;
+        text-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+      }
+      .star.active {
+        color: #ffc107;
+        transform: scale(1.15);
+        text-shadow: 0 4px 16px rgba(255, 193, 7, 0.3);
+      }
+      .best-rating {
+        position: absolute;
+        top: -25px;
+        right: 0;
+        color: #4CAF50;
+        font-size: 12px;
+        font-weight: bold;
+      }
+      .message {
+        font-size: 18px;
+        margin: 20px 0;
+        color: #555;
+        min-height: 60px;
+      }
+      .button-container {
+        position: relative;
+        min-height: 60px;
+        margin: 30px 0;
+      }
+      .action-btn {
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+        border: none;
+        padding: 14px 45px;
+        border-radius: 28px;
+        /* font-size: 18px; */
+        cursor: pointer;
+        transition: all 0.3s ease;
+        opacity: 0;
+        pointer-events: none;
+      }
+      .action-btn.active {
+        opacity: 1;
+        pointer-events: all;
+      }
+      .submit-btn {
+        background: #4CAF50;
+        color: white;
+      }
+      .store-btn {
+        background: #2196F3;
+        color: white;
+      }
+      .thank-you-msg {
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 100%;
+        font-size: 18px;
+        color: #1a1a1a;
+        margin: 20px 0;
+        opacity: 0;
+        pointer-events: none;
+        transition: all 0.4s ease;
+      }
+      .thank-you-msg.visible {
+        opacity: 1;
+      }
   </style>
 </head>
 <body id="body">
@@ -319,12 +411,13 @@
       <div class="container">
         <div class="row mb-3">
           <div class="col-12 d-flex justify-content-between align-items-center">
-            <button style="background: none;border: none;font-size: xx-large;" onclick="window.location.href='trend.html';">
-              🔥
-            </button>
-            <h1 class="main-title mb-0">Funny Prank Sounds</h1>
+            
             <button id="settingsDropdown" style="font-size: xx-large;background: none;border: none;">
               ⚙
+            </button>
+            <h1 class="main-title mb-0">Funny Prank Sounds</h1>
+            <button style="background: none;border: none;font-size: xx-large;" onclick="window.location.href='trend.html';">
+              🔥
             </button>
           </div>
         </div>
@@ -338,21 +431,36 @@
             <h5 class="modal-title" id="settingsModalLabel">Rate Us</h5>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
-          <div class="modal-body text-center">
-            <p>Please rate our app:</p>
-            <!-- Star Rating System -->
-            <div id="starRating">
-              <span class="star" data-value="1">★</span>
-              <span class="star" data-value="2">★</span>
-              <span class="star" data-value="3">★</span>
-              <span class="star" data-value="4">★</span>
-              <span class="star" data-value="5">★</span>
+          <div class="container">
+            <div class="header">
+             
+              <p style="text-align: center;" >Rate your prank experience!</p>
             </div>
-            <p id="ratingMessage" class="mt-3"></p>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-            <a id="googlePlayBtn" href="https://play.google.com/store" target="_blank" class="btn btn-success d-none">Go to Google Play</a>
+            <div class="emoji" id="emoji" style="text-align: center;">🤩</div>
+            <div class="stars">
+              <div class="star" data-rating="1">☆</div>
+              <div class="star" data-rating="2">☆</div>
+              <div class="star" data-rating="3">☆</div>
+              <div class="star" data-rating="4">☆</div>
+              <div class="star" data-rating="5">
+                ☆
+                <span style="text-align: center;" class="best-rating">Best!</span>
+              </div>
+            </div>
+            <div class="message" id="message" style="text-align: center;">
+              Click stars to rate your experience!
+            </div>
+            <div class="button-container">
+              <button class="action-btn submit-btn" id="submitBtn">
+                SUBMIT RATING
+              </button>
+              <button class="action-btn store-btn" id="storeBtn" onclick="redirectToStore()">
+                RATE ON PLAY STORE
+              </button>
+              <div class="thank-you-msg" id="lowRatingFeedback">
+                Thank you for your feedback! 🌟 We'll keep improving!
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -369,56 +477,21 @@
   <script>
 
 document.addEventListener('DOMContentLoaded', function() {
-  // Check if user has gone through initial screen this session
-  const hasSeenIntro = sessionStorage.getItem('hasSeenIntro');
+  // Check if user has already selected sounds before
+  const hasVisitedBefore = localStorage.getItem('hasVisitedBefore');
   
-  if (hasSeenIntro === 'true') {
-    // If already seen intro, show sound cards directly
+  if (hasVisitedBefore) {
+    // If user has visited before, show sound cards directly
     document.getElementById("main").style.display = "none";
     document.getElementById("body").style.backgroundColor = "white";
     document.getElementById("body").style.padding = 0;
     document.getElementById("soundCardsPage").style.display = "block";
     createSoundCardsGrid();
   } else {
-    // First time in this session, show the selection screen
+    // If it's first visit, show the main selection screen
     createSoundButtons();
   }
 });
-
-
-
-
-
-
-
-
-
-     const stars = document.querySelectorAll('.star');
-  const ratingMessage = document.getElementById('ratingMessage');
-  const googlePlayBtn = document.getElementById('googlePlayBtn');
-
-  stars.forEach(star => {
-    star.addEventListener('click', function() {
-      let rating = this.getAttribute('data-value');
-      
-      // Reset all stars
-      stars.forEach(s => s.classList.remove('selected'));
-      
-      // Highlight selected stars
-      for (let i = 0; i < rating; i++) {
-        stars[i].classList.add('selected');
-      }
-
-      // Show message and button based on rating
-      if (rating == 5) {
-        ratingMessage.innerHTML = "Thank you! Please rate us on Google Play.";
-        googlePlayBtn.classList.remove('d-none'); // Show Google Play button
-      } else {
-        ratingMessage.innerHTML = "Thank you for your feedback!";
-        googlePlayBtn.classList.add('d-none'); // Hide Google Play button
-      }
-    });
-  });
     /////////////////////////////////
     const sounds = [
       { id: 1, name: "Airhorn", icon: "📣", bgColor: "#ffdddd", titleColor: "#ffb3b3", image: "img.png",link:"index.html" },
@@ -478,8 +551,8 @@ document.addEventListener('DOMContentLoaded', function() {
   window.scrollTo(0, 0);
   createSoundCardsGrid();
   
-  // Remember that user has seen the intro screen
-  sessionStorage.setItem('hasSeenIntro', 'true');
+  // Save that user has made a selection
+  localStorage.setItem('hasVisitedBefore', 'true');
 }
     function createSoundCardsGrid() {
       const grid = document.getElementById('soundCardsGrid');
@@ -549,6 +622,69 @@ document.addEventListener('DOMContentLoaded', function() {
     sidebarOverlay.style.display = 'none';
     document.body.style.overflow = ''; // Restore scrolling
   }
+
+
+
+
+
+
+
+
+  let currentRating = 0;
+      const submitBtn = document.getElementById('submitBtn');
+      const storeBtn = document.getElementById('storeBtn');
+      const emojiElement = document.getElementById('emoji');
+      const messageElement = document.getElementById('message');
+      const lowRatingFeedback = document.getElementById('lowRatingFeedback');
+      const emojis = {
+        1: '😢',
+        2: '😕',
+        3: '😐',
+        4: '😊',
+        5: '🤩'
+      };
+      const messages = {
+        1: 'Oops! We failed to make you laugh',
+        2: 'We need more funny training!',
+        3: 'We can do better!',
+        4: 'Glad we made you smile! 😄',
+        5: 'Wow! You\'re having fun!'
+      };
+      document.querySelectorAll('.star').forEach((star) => {
+        star.addEventListener('click', () => {
+          currentRating = parseInt(star.getAttribute('data-rating'));
+          updateStars();
+          updateFeedback();
+          toggleButtons();
+        });
+      });
+      function updateStars() {
+        document.querySelectorAll('.star').forEach((star, index) => {
+          star.classList.toggle('active', index < currentRating);
+          star.textContent = index < currentRating ? '★' : '☆';
+        });
+      }
+      function updateFeedback() {
+        emojiElement.textContent = emojis[currentRating];
+        messageElement.textContent = messages[currentRating];
+      }
+      function toggleButtons() {
+        if (currentRating >= 4) {
+          storeBtn.classList.add('active');
+          submitBtn.classList.remove('active');
+        } else {
+          storeBtn.classList.remove('active');
+          submitBtn.classList.add('active');
+        }
+        lowRatingFeedback.classList.remove('visible');
+      }
+      submitBtn.addEventListener('click', () => {
+        submitBtn.classList.remove('active');
+        lowRatingFeedback.classList.add('visible');
+      });
+      function redirectToStore() {
+        window.location.href = 'action://open_page1';
+      }
   </script>
 </body>
 </html>
