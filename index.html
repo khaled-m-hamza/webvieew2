@@ -480,7 +480,7 @@
 
 document.addEventListener('DOMContentLoaded', function() {
   // Check if user has already selected sounds before
-  const hasVisitedBefore = localStorage.getItem('hasVisitedBefore');
+  const hasVisitedBefore = sessionStorage.getItem('hasVisitedBefore');
   
   if (hasVisitedBefore) {
     // If user has visited before, show sound cards directly
@@ -554,7 +554,7 @@ document.addEventListener('DOMContentLoaded', function() {
   createSoundCardsGrid();
   
   // Save that user has made a selection
-  localStorage.setItem('hasVisitedBefore', 'true');
+  sessionStorage.setItem('hasVisitedBefore', 'true');
 }
     function createSoundCardsGrid() {
       const grid = document.getElementById('soundCardsGrid');
